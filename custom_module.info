@@ -1,0 +1,5 @@
+name = Custom Module
+description = This module outputs the Inventions Articles.
+package = Vic Custom Module
+version = 7.x-0.1
+core = 7.x

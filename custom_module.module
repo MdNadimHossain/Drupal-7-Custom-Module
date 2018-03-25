@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * @file
+ * Custom Module to show invention Articles
+ */
+
+
+ function custom_module_block_info() {
+  $blocks['invent'] = array(
+    // info: The name of the block.
+    'info' => t('Invention'),
+    'status' => TRUE,
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+function custom_module_block_view($delta = '') {
+if ($delta == 'invent') {
+
+    //Based on the node types create a query and then load the node types
+    $query = new EntityFieldQuery();
+    $query
+    ->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'article')
+    ->propertyCondition('status', 1)
+    ->propertyOrderBy('created', 'DESC')
+    ->range(0, 5);
+
+    $result = $query->execute();
+    $nodes = array();
+    if (isset($result['node'])) {
+      $nids = array_keys($result['node']);
+      $nodes = entity_load('node', $nids);
+    }
+
+    //Loop through the loded nodes
+    //Which we will pass to the block content
+
+    $output = '<div class="container"><div class="row">';
+    foreach($nodes as $a_item){
+      $options = array('absolute' => TRUE);
+      $url = url('node/' . $a_item->nid, $options);
+      $temp ='<div class="col-sm-10">';
+      $temp .= '<h3> <a href='.$url.'>'.t($a_item->title).'</a></h3>';
+      $temp .= '<h6> Last updated '.t(format_date($a_item->changed)).'</h5>';
+      $temp .= '<p class="text-justify">'.t($a_item->body['und'][0]['summary']).'</p>';
+      $temp .='</div>';
+      $output .= $temp;
+    }
+    $output .= '</div></div>';
+
+
+
+    $block = array(
+      'subject' => t('Invention'),
+      'content' => $output,
+    );
+    return $block;
+  }
+}
+?>
