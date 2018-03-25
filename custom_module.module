@@ -6,18 +6,19 @@
  */
 
 
- function custom_module_block_info() {
-  $blocks['invent'] = array(
+function custom_module_block_info() {
+  $blocks['inventions'] = array(
     // info: The name of the block.
     'info' => t('Invention'),
     'status' => TRUE,
+    //'region' => 'content',
     'cache' => DRUPAL_NO_CACHE,
   );
   return $blocks;
 }
 
 function custom_module_block_view($delta = '') {
-if ($delta == 'invent') {
+if ($delta == 'inventions') {
 
     //Based on the node types create a query and then load the node types
     $query = new EntityFieldQuery();
@@ -35,9 +36,7 @@ if ($delta == 'invent') {
       $nodes = entity_load('node', $nids);
     }
 
-    //Loop through the loded nodes
-    //Which we will pass to the block content
-
+    //Loop through the loded nodes to show the block content
     $output = '<div class="container"><div class="row">';
     foreach($nodes as $a_item){
       $options = array('absolute' => TRUE);
